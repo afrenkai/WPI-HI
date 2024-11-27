@@ -1,12 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-base_url = "https://digital.wpi.edu/collections/hi?locale=en&page="
-link_pattern = re.compile(r'^https://digital\.wpi\.edu/concern/generic_works/[A-Za-z0-9]+\?locale=en$')
-pattern = re.compile(r'https://digital\.wpi\.edu/concern/generic_works/[A-Za-z0-9]+\.csv\?locale=en')
+BASE_URL = "https://digital.wpi.edu/collections/hi?locale=en&page="
+LINK_PATTERN = re.compile(r'^https://digital\.wpi\.edu/concern/generic_works/[A-Za-z0-9]+\?locale=en$')
 
-def fetch_links(page_number):
-    url = f"{base_url}{page_number}"
+def fetch_links(page_number: int):
+    url = f"{BASE_URL}{page_number}"
     print(f"Fetching page: {url}")
     response = requests.get(url)
     if response.status_code == 200:
@@ -46,7 +45,7 @@ def main():
         links = fetch_links(page)
         for link in links:
             print(link)
-            if link_pattern.match(link):
+            if LINK_PATTERN.match(link):
                 if link not in valid_content_links:
                     valid_content_links.append(link)
     print(valid_content_links)
