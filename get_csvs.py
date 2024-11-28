@@ -1,27 +1,23 @@
-import re
 import os
 import requests
-from bs4 import BeautifulSoup
 
-if not os.path.exists('Data'):
-    os.makedirs('Data')
+if not os.path.exists('Data/Metadata'):
+    os.makedirs('Data/Metadata')
 
-
-#thoughts: make dir, fetch csv, write to corresponding file. 
-
-
-            
 def fetch_csv(link):
     print(f"Fetching CSV from: {link}")
     response = requests.get(link)
     if response.status_code == 200:
-        print(response.text)
+        filename = os.path.join('Data/Metadata', os.path.basename(link).split('?')[0])
+        temp = response.content
+        temp = temp.decode('utf-8')
+        temp = temp.strip()
+        temp = temp.replace('|', ',')
+        temp = '\n'.join([line.strip() for line in temp.split('\n')])
+        with open(filename, 'wb') as file:
+            file.write(temp.encode('utf-8'))
+        print(f"Saved CSV to: {filename}")
     else:
         print(f"Failed to fetch CSV from {link} (Status code: {response.status_code})")
 
 
-with open('content.txt', 'r') as f:
-    content_links = f.readlines()
-    for link in content_links:
-        link = link.replace("?locale=en", ".csv?locale=en")
-        fetch_csv(link.strip())

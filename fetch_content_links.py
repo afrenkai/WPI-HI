@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+
 BASE_URL = "https://digital.wpi.edu/collections/hi?locale=en&page="
 LINK_PATTERN = re.compile(r'^https://digital\.wpi\.edu/concern/generic_works/[A-Za-z0-9]+\?locale=en$')
 
@@ -39,7 +40,7 @@ def fetch_csv(link):
 
 def main():
     start_page = 1
-    end_page = 2
+    end_page = 921
     valid_content_links = []
     for page in range(start_page, end_page + 1):
         links = fetch_links(page)
