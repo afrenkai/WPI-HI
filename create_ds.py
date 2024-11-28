@@ -17,7 +17,7 @@ def create_ds():
     for image_file in image_files:
         ds['image'].append(image_file)
     
-    # print(ds)
+
     for metadata_file in metadata_files:
         temp_df = pd.read_csv(metadata_file)
         
@@ -35,7 +35,7 @@ def create_ds():
     dataset = Dataset.from_dict(ds)
     dataset_dict = DatasetDict({'train': dataset})
 
-    # dataset_dict.push_to_hub("afrenkai/WPI-Historical-Image-Collection")
+    
 
     return dataset_dict
 if __name__ == "__main__":
