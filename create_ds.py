@@ -11,7 +11,7 @@ def create_ds():
     
     sample_df = pd.read_csv(metadata_files[0])
     for col in sample_df.columns:
-        ds[col.strip()] = []
+        ds[col] = []
     
     print(ds.keys())
 
