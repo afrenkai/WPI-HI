@@ -8,7 +8,7 @@ LINK_PATTERN = re.compile(r'^https://digital\.wpi\.edu/concern/generic_works/[A-
 
 def main():
     start_page = 1
-    end_page = 1
+    end_page = 921
     valid_content_links = []
     for page in range(start_page, end_page + 1):
         links = fetch_links(page)

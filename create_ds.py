@@ -1,43 +1,45 @@
-#pyright: reportMissingImports=false
-from datasets import load_dataset, Dataset, DatasetDict
+# pyright: reportMissingImports=false
+from datasets import Dataset, DatasetDict, Features, Value, Image
 import os
 import pandas as pd
 
 def create_ds():
     metadata_files = [os.path.join('Data/Metadata', file) for file in os.listdir('Data/Metadata') if file.endswith('.csv')]
-    image_files = [os.path.join('Data/Image', file) for file in os.listdir('Data/Image') if file.endswith('.jpg')]
-    
-    ds = {'image': []}
-    
-    sample_df = pd.read_csv(metadata_files[0])
-    for col in sample_df.columns:
-        ds[col] = []
-    
-    print(ds.keys())
+    print('metadata files made')
+    image_files = sorted([os.path.join('Data/Image', file) for file in os.listdir('Data/Image') if file.endswith('.jpg')])
+    print('img files made')
 
-    for image_file in image_files:
-        ds['image'].append(image_file)
+    all_metadata = []
+    print('blank md list made')
+    for mdfile in metadata_files:
+        sample_df = pd.read_csv(mdfile)
+        sample_df.reset_index(drop = True, inplace = True)
+        all_metadata.append(sample_df)
+        print(f'added {mdfile} to metadata df')
+    if not all_metadata:
+        raise ValueError('404 md not found lol')
+
+    metadata_df = pd.concat(all_metadata, ignore_index=True).astype(str) #temp fix for pitch, need to fix later 
+    print('metadata df made')
+    ds = {'image': image_files  }
+
+    for col in metadata_df.columns:
+        ds[col] = metadata_df[col].tolist()
+
     
-    # print(ds)
-    for metadata_file in metadata_files:
-        temp_df = pd.read_csv(metadata_file)
-        
-        keyword_columns = [col for col in temp_df.columns if "keyword" in col]
-        temp_df['keyword_combined'] = temp_df[keyword_columns].apply(
-            lambda row: '; '.join(filter(None, row.astype(str).str.strip())), axis=1
-        )
-        temp_df = temp_df.drop(columns=keyword_columns)
-        
-        for col in temp_df.columns:
-            if col not in ds:
-                ds[col] = [] 
-            ds[col].extend(temp_df[col].tolist())
-    
-    dataset = Dataset.from_dict(ds)
+    features = Features({
+        'image': Image(), 
+        **{col: Value('string') for col in metadata_df.columns} 
+    })
+  
+    dataset = Dataset.from_dict(ds, features=features) 
     dataset_dict = DatasetDict({'train': dataset})
 
-    # dataset_dict.push_to_hub("afrenkai/WPI-Historical-Image-Collection")
+    dataset_dict.push_to_hub('afrenkai/WPI-Historical-Image-Collection')
 
     return dataset_dict
+
 if __name__ == "__main__":
-    create_ds()
+    dataset_dict = create_ds()
+    print(dataset_dict)
+
