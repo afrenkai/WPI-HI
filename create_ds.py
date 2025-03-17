@@ -39,9 +39,9 @@ def create_ds():
     ds = {'image': image_files}
     good_col = []
     for col in tqdm(metadata_df.columns):
-        # print(col)
-        col_comp = re.sub(r'([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?', r'', col)
-        # print(col_comp)
+        print(col)
+        col_comp = re.sub(r"(?=\.\d|d)(?:\.?\d*)", '', col )
+        print(col_comp)
         if col_comp not in ds.keys():
             good_col.append(col)
             ds[col] = metadata_df[col].tolist() 
@@ -57,7 +57,7 @@ def create_ds():
     print(type(dataset['image']))
 
     dataset_dict = DatasetDict({'train': dataset})
-    dataset_dict.push_to_hub('afrenkai/WPI-Historical-Image-Collection')
+    # dataset_dict.push_to_hub('afrenkai/WPI-Historical-Image-Collection')
 
     return dataset_dict
 
