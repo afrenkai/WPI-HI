@@ -1,6 +1,6 @@
 from get_csvs import fetch_csv
 from get_imgs import fetch_img
-from fetch_content_links import fetch_links
+from fetch_content_links import fetch_links, get_end_page
 import re
 from tqdm import trange
 
@@ -9,7 +9,7 @@ LINK_PATTERN = re.compile(r'^https://digital\.wpi\.edu/concern/generic_works/[A-
 
 def main():
     start_page = 1
-    end_page = 921
+    end_page = get_end_page('https://digital.wpi.edu/collections/hi?locale=en')
     valid_content_links = []
     for page in trange(start_page, end_page + 1):
         links = fetch_links(page)
