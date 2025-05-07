@@ -57,7 +57,7 @@ def create_ds():
     print(type(dataset['image']))
 
     dataset_dict = DatasetDict({'train': dataset})
-    # dataset_dict.push_to_hub('afrenkai/WPI-Historical-Image-Collection')
+    dataset_dict.push_to_hub('afrenkai/WPI-Historical-Image-Collection')
 
     return dataset_dict
 

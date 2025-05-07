@@ -1,9 +1,9 @@
 import csv
 import os
-
+from tqdm import tqdm
 def norm():
     metadata_files = [os.path.join('Data/Metadata', file) for file in os.listdir('Data/Metadata') if file.endswith('.csv')]          
-    for file in metadata_files:
+    for file in tqdm(metadata_files):
         with open(file, newline='', encoding='utf-8') as f:
             c = csv.reader(f)
             normed = list(c)
@@ -22,7 +22,7 @@ def norm():
             writer = csv.writer(f)
             writer.writerows(normed)
 
-        print(f'updated headers in {file}: {headers}')
+        # print(f'updated headers in {file}: {headers}')
         
 
 

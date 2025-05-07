@@ -31,16 +31,25 @@ def fetch_content(link):
         print(f'Failed to fetch content from {link} (Status code: {response.status_code})')
 
 def fetch_csv(link):
-    print(f'Fetching CSV from: {link}')
+    # print(f'Fetching CSV from: {link}')
     response = requests.get(f'{link}.csv')
     if response.status_code == 200:
         print(response.text)
     else:
         print(f'Failed to fetch CSV from {link} (Status code: {response.status_code})')
 
+
+
+def get_end_page(html: str) -> int:
+    base_page = BeautifulSoup(html, 'html.parser')
+    page_num_unextract = str(base_page.find_all("li")[-1])
+    page_num = page_num_unextract.split(">")
+    page_num = page_num[2].split("<")[0]
+    return int(page_num)
+
 def main():
     start_page = 1
-    end_page = 921
+    end_page = get_end_page('https://digital.wpi.edu/collections/hi?locale=en')
     valid_content_links = []
     for page in range(start_page, end_page + 1):
         links = fetch_links(page)
